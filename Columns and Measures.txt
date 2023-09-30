@@ -1,0 +1,28 @@
+-- Columns 
+
+X = RANKX(ALL(Dates),Dates[Date] ,Dates[Date], ASC) --RANKX IS TO START FROM 1 TO ROWSCOUNT IN SPECIFIC COLUMN
+X = RELATED(Dates[X]) -- RELATED  used to avoid re calculate the column that you calculated it before in another table 
+Y = [Sales Amount]
+X * X = Sales[X] * Sales[X]
+X*Y = Sales[X] * Sales[Y]
+
+-- Measures 	
+
+SumofX = SUMX(ALL(Sales),Sales[X])
+SumofY = SUMX(ALL(Sales),Sales[Y])   -- ALL  used to Avoid Changing in Sales Table Value when you Filter
+SumofXX = SUMX(ALL(Sales),Sales[X] * Sales[X])
+SumofXY = SUMX(ALL(Sales),Sales[X]*Sales[Y])
+N= COUNTX(Sales ,Sales[Date])
+Slope = ( Sales[N] * Sales[SumofXY]  - Sales[SumofX] *Sales[SumofY]) / (Sales[N] * Sales[SumofXX] - Sales[SumofX] * Sales[SumofX])
+intercept = ( Sales[SumofY] - Sales[Slope] * Sales[SumofX]) /Sales[N]
+
+Now you have intercept and slope , to Draw the Line predictable , you have to calc Y` = intercept + slope * [X]
+so 
+
+--Cloumns
+Forcast = 345943.33 +  Sales[X] * 345
+--Measures 
+SumofForcast = SUM(Sales[Forcast])
+
+--------Till Now , We ONLY DRAW lINEAR FOR THE DATA WE HAVE , NOT FOR THE HIDDEN DATA IN THE Future SO , Lets Do it  -------------
+

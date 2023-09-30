@@ -1,0 +1,21 @@
+Dates = 
+VAR minyear = YEAR(MIN(Sales[Date]))  --- return min year in column date in table sales 
+VAR maxyear = YEAR(MAX(Sales[Date]))  --- return max year in column date in table sales 
+
+VAR mindate= DATE(minyear,1,1)       --- make this year as a Date    YEAR , MONTH,DAY
+VAR maxdate= DATE(maxyear,12,31)     --- make this year as a Date    YEAR , MONTH,DAY
+
+RETURN 
+    --- ADDVOLUMNS USED TO add column in table     columname , value 
+    ADDCOLUMNS(
+        CALENDAR(mindate,maxdate) ,   --- by default this column will named Date , because of the Funtion CALENDER
+        "Year",YEAR([Date]) ,         ---- RETURN Years
+        "Month",FORMAT([Date],"MMM") ,   --- Return Name of Month
+        "Day" , DAY([Date]) ,          ---- Reutn Day number 
+        "Month no." , MONTH([Date]) ,   ---- Reutn Month number   , You can notice that , without using Format , function return the number no text   , will use it to sort column Month Name , (select Month  column , From Column tools , sort by and select thjis column)
+        "Day Name" , FORMAT([Date],"dddd") ,  ---- Reutn Day name
+        "Week day" , WEEKDAY([Date],2), -- mean the first day in week is monday , you can change it easy   , will use it to sort column Day Name , (select Day Name column , From Column tools , sort by and select thjis column) 
+        "Week" , "W" &WEEKNUM([Date]),  -- retutn number of week in Year 
+        "Week no." , WEEKNUM([Date])  -- retutn number of week in Year , will use it to sort column Week, (select Week column , From Column tools , sort by and select thjis column)
+
+        )

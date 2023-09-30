@@ -1,0 +1,30 @@
+Data Source : csvFile StoreSales  with Import Mode 
+Aim : want to do Linear Rgresrrion on Sales Data  
+	to Draw a Line of Data , We have to Find the m , b then calc the Y`
+Steps : 
+1- upload File 
+2- Do Transformations about File 
+      2.1- select the columns and change table name (Date,Sales)
+      2.2- Craete a new Column that is Sum of Sales group By Date 
+
+3- Create a Table of Date .. using Dax query , Will attach it in another File
+
+
+4- Apply some Measures and New Columns to Be Ready for Applying Linear Regression 
+   
+	Y = m * X  + b (Aim is to find the m , b of the equation)
+	
+	to Find m 
+	slope = (nΣ(xy) - ΣxΣy) / (nΣ(x²) - (Σx)²) So , we Have to Calc some Columns and Some Measures ,Will attach it in another File
+	New Column : X Y XY XX 
+	Measures   : sumofX sumofY  sumofXX sumofXY  N   slope
+	
+	to Find b 
+	intercept= (Σy - mΣx) / n  we have everything , so we will calculate only the measure intercept
+	
+	Now we have intercept and Slop , so lets Find the Y`   so New Column  Y` = intercept + Slope * [X]
+	and Lets Get the Measure of Sum of Y` to Draw the Line 
+
+
+	Till Now , We ONLY DRAW lINEAR FOR THE DATA WE HAVE , NOT FOR THE HIDDEN DATA IN THE Future SO , Lets Do it  
+	
