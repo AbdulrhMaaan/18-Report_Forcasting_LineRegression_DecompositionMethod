@@ -27,4 +27,81 @@ Steps :
 
 
 	Till Now , We ONLY DRAW lINEAR FOR THE DATA WE HAVE , NOT FOR THE HIDDEN DATA IN THE Future SO , Lets Do it  
+ if yoou want to increase the X valuse to Get the Y` for the Future , just increase the Data AND Create A new Table to Have it Sales-Forcasting
+
+We can notice the Trend in the Begining of Years , So lets Deseasonalize it , To Deseasonalize it , you have to get the wieght of the Trend Values 
+
+IN Date Table Create a cloumn      	 Is Begining of Year = IF(Dates[Month no.]=1 && Dates[Day]==1 ,1,0) 
+THEN IN Sales Table Create same column   Is Begining of Year = RELATED(Dates[Is Begining of Year])
+		    Create a Measure     
+
+Weight Begining Of Year = 
+VAR val =
+CALCULATE(
+    AVERAGE(Sales[Amount]) , ALL(Sales) , Sales[Is Begining of Year]=1 
+        )
+VAR  overall=AVERAGEX(ALL(Sales),Sales[Amount])
+RETURN val / overall
+
+
 	
+NOW Calculate the Column of Deseasonlized the Trend of Begining Year 
+Deseasonalized Begining Of Year = 
+IF(Sales[Is Begining of Year] = 1 , 
+Sales[Amount]/[Weight Begining Of Year]
+,
+Sales[Amount]
+) 
+
+
+
+Also We Notice the Trend in the WEEK DAYS   
+so lets do the same in the Week Days 
+IN Sales Table       Create same column   				Week Day = RELATED(Dates[Week day])
+		     create MEASURES of Weights of Days      	
+Weight Day 1 = 
+VAR val = 
+CALCULATE(
+    AVERAGE(Sales[Deseasonalized Begining Of Year]) , ALL(Sales) , Sales[Week Day]=1 
+        )
+
+VAR  overall=AVERAGEX(ALL(Sales),Sales[Deseasonalized Begining Of Year])
+
+RETURN val / overall
+
+
+
+		    Create a Column  of Deaseonlized WeekDays       Deseasonalized Week Day = 
+
+
+
+
+NOW LETS CREATE THE THREE COLUMN IN THE SALES-FORCAST TABLE 
+
+Is Begining of Year = RELATED(Dates[Is Begining of Year])
+
+
+Forcast Begining Year = IF(
+ 'Sales-Forcasting'[Is Begining of Year] =1 , 'Sales-Forcasting'[Forcast Week Day] * [Weight Begining Of Year]  , 'Sales-Forcasting'[Forcast Week Day] 
+)
+
+
+Forcast Week Day = 
+
+SWITCH (
+'Sales-Forcasting'[Week Day] ,
+1 , 'Sales-Forcasting'[Forcast] * [Weight Day 1],
+2 , 'Sales-Forcasting'[Forcast] * [Weight Day 2],
+3 , 'Sales-Forcasting'[Forcast] * [Weight Day 3],
+4 , 'Sales-Forcasting'[Forcast] * [Weight Day 4],
+5 , 'Sales-Forcasting'[Forcast] * [Weight Day 5],
+6 , 'Sales-Forcasting'[Forcast] * [Weight Day 6],
+7 , 'Sales-Forcasting'[Forcast] * [Weight Day 7]
+
+)
+
+
+AND THE Measure of Forcast will be 
+SumofForcast = SUM('Sales-Forcasting'[Forcast Begining Year])
+
+
